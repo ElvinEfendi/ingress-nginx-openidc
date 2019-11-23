@@ -50,6 +50,16 @@ events {
 http {
     lua_package_path "/etc/nginx/lua/?.lua;;";
 
+    ### OpenIDC specific configuration starts
+    lua_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+    lua_ssl_verify_depth 5;
+
+    # cache for discovery metadata documents
+    lua_shared_dict discovery 1m;
+    # cache for JWKs
+    lua_shared_dict jwks 1m;
+    ### OpenIDC specific configuration ends
+
     {{ buildLuaSharedDictionaries $cfg $servers $all.Cfg.DisableLuaRestyWAF }}
 
     init_by_lua_block {
